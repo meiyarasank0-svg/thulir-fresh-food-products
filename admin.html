@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Thulir Admin Orders</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f8f3;
+            color: #222;
+        }
+
+        header {
+            background: #198754;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 5px;
+        }
+
+        header p {
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .top-bar h2 {
+            color: #198754;
+        }
+
+        .refresh-btn {
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .refresh-btn:hover {
+            background: #146c43;
+        }
+
+        #ordersContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #198754;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            color: #198754;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .payment {
+            background: #e8f5e9;
+            color: #198754;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .customer-info {
+            background: #f7faf8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+
+        .customer-info strong {
+            color: #198754;
+        }
+
+        .products-title {
+            color: #198754;
+            margin-bottom: 10px;
+        }
+
+        .product-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .product-row:last-child {
+            border-bottom: none;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            color: #198754;
+            margin-top: 15px;
+        }
+
+        .status-section {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-section label {
+            font-weight: bold;
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .empty {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-radius: 12px;
+            color: #777;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #198754;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #b00020;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 92%;
+            }
+
+            .order-card {
+                padding: 15px;
+            }
+
+            .product-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .total {
+                text-align: left;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <h1>🌽 Thulir Fresh Food Products</h1>
+
+        <p>Admin Order Dashboard</p>
+
+    </header>
+
+
+
+    <!-- MAIN -->
+
+    <div class="container">
+
+
+        <div class="top-bar">
+
+            <h2>Customer Orders</h2>
+
+            <button
+                class="refresh-btn"
+                onclick="loadOrders()">
+
+                🔄 Refresh Orders
+
+            </button>
+
+        </div>
+
+
+
+        <!-- ORDERS -->
+
+        <div id="ordersContainer">
+
+            <div class="loading">
+
+                Loading orders...
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+        /* =====================================
+           LOAD ORDERS
+        ===================================== */
+
+        async function loadOrders() {
+
+            const container =
+                document.getElementById(
+                    "ordersContainer"
+                );
+
+
+            container.innerHTML =
+                '<div class="loading">Loading orders...</div>';
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:5000/api/orders"
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server error"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                console.log(
+                    "Orders:",
+                    data
+                );
+
+
+                if (
+                    !data.orders ||
+                    data.orders.length === 0
+                ) {
+
+                    container.innerHTML = `
+                        <div class="empty">
+
+                            <h3>No Orders Yet 📦</h3>
+
+                            <p>
+                                Customer orders will appear here.
+                            </p>
+
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                container.innerHTML = "";
+
+
+                /* SHOW NEWEST ORDER FIRST */
+
+                const orders =
+                    [...data.orders].reverse();
+
+
+                orders.forEach(
+                    function (order) {
+
+                        createOrderCard(
+                            order
+                        );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Order Loading Error:",
+                    error
+                );
+
+
+                container.innerHTML = `
+                    <div class="error">
+
+                        <h3>⚠️ Unable to load orders</h3>
+
+                        <p>
+                            Please make sure the Flask backend is running.
+                        </p>
+
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           CREATE ORDER CARD
+        ===================================== */
+
+        function createOrderCard(order) {
+
+            const container =
+                document.getElementById(
+                    "ordersContainer"
+                );
+
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "order-card";
+
+
+            /* PAYMENT */
+
+            const paymentMethod =
+                order.payment_method ||
+                "Not specified";
+
+
+            /* CUSTOMER */
+
+            const customer =
+                order.customer || {};
+
+
+            /* PRODUCTS */
+
+            const products =
+                order.products || [];
+
+
+            let productsHTML = "";
+
+
+            products.forEach(
+                function (product) {
+
+                    const quantity =
+                        product.quantity || 1;
+
+
+                    const price =
+                        product.price || 0;
+
+
+                    const itemTotal =
+                        price * quantity;
+
+
+                    productsHTML += `
+
+                        <div class="product-row">
+
+                            <span>
+                                ${product.name}
+                                × ${quantity}
+                            </span>
+
+                            <strong>
+                                ₹${itemTotal}
+                            </strong>
+
+                        </div>
+
+                    `;
+
+                }
+            );
+
+
+
+            /* STATUS */
+
+            const currentStatus =
+                order.status ||
+                "Pending";
+
+
+
+            /* ORDER DATE */
+
+            let orderDate =
+                order.order_date ||
+                order.created_at ||
+                "";
+
+
+            if (orderDate) {
+
+                try {
+
+                    orderDate =
+                        new Date(
+                            orderDate
+                        ).toLocaleString(
+                            "en-IN"
+                        );
+
+                } catch (error) {
+
+                    console.log(
+                        "Date formatting error"
+                    );
+
+                }
+
+            }
+
+
+
+            /* CARD HTML */
+
+            card.innerHTML = `
+
+                <div class="order-header">
+
+                    <div class="order-id">
+
+                        🆔 Order ID:
+                        ${order.order_id || "N/A"}
+
+                    </div>
+
+                    <div class="payment">
+
+                        💳 ${paymentMethod}
+
+                    </div>
+
+                </div>
+
+
+                <div class="customer-info">
+
+                    <strong>👤 Customer:</strong>
+                    ${customer.name || "N/A"}
+
+                    <br>
+
+                    <strong>📞 Phone:</strong>
+                    ${customer.phone || "N/A"}
+
+                    <br>
+
+                    <strong>📍 Address:</strong>
+                    ${customer.address || "N/A"}
+
+                    ${
+                        orderDate
+                        ? `
+                            <br>
+                            <strong>🕒 Ordered:</strong>
+                            ${orderDate}
+                          `
+                        : ""
+                    }
+
+                </div>
+
+
+                <h3 class="products-title">
+
+                    🛒 Ordered Products
+
+                </h3>
+
+
+                ${productsHTML}
+
+
+                <div class="total">
+
+                    Total: ₹${order.total || 0}
+
+                </div>
+
+
+                <div class="status-section">
+
+                    <label>
+                        Order Status:
+                    </label>
+
+
+                    <select
+                        class="status-select"
+                        onchange="updateStatus(
+                            '${order.order_id}',
+                            this.value
+                        )">
+
+                        <option
+                            value="Pending"
+                            ${currentStatus === "Pending" ? "selected" : ""}>
+
+                            Pending
+
+                        </option>
+
+                        <option
+                            value="Confirmed"
+                            ${currentStatus === "Confirmed" ? "selected" : ""}>
+
+                            Confirmed
+
+                        </option>
+
+                        <option
+                            value="Preparing"
+                            ${currentStatus === "Preparing" ? "selected" : ""}>
+
+                            Preparing
+
+                        </option>
+
+                        <option
+                            value="Delivered"
+                            ${currentStatus === "Delivered" ? "selected" : ""}>
+
+                            Delivered
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                card
+            );
+
+        }
+
+
+
+        /* =====================================
+           UPDATE ORDER STATUS
+        ===================================== */
+
+        async function updateStatus(
+            orderId,
+            status
+        ) {
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://127.0.0.1:5000/api/orders/" +
+                        orderId +
+                        "/status",
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    status: status
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (
+                    data.status ===
+                    "success"
+                ) {
+
+                    alert(
+                        "Order status updated!"
+                    );
+
+                } else {
+
+                    alert(
+                        data.message ||
+                        "Status update failed."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Status Error:",
+                    error
+                );
+
+
+                alert(
+                    "Unable to update order status. Check Flask backend."
+                );
+
+            }
+
+        }
+
+
+
+        /* =====================================
+           LOAD ORDERS WHEN PAGE OPENS
+        ===================================== */
+
+        loadOrders();
+
+    </script>
+
+
+</body>
+
+</html>

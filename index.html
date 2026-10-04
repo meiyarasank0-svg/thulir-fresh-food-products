@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Thulir Fresh Food Products</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div class="logo">
+            <h1>Thulir Fresh Food Products</h1>
+        </div>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#products">Products</a>
+            <a href="#contact">Contact</a>
+
+            <button id="signInButton" class="sign-in-button">
+                Sign In
+            </button>
+
+            <button id="cartButton" class="cart-button">
+                🛒 Cart <span id="cartCount">0</span>
+            </button>
+        </nav>
+
+    </header>
+
+
+    <main>
+
+
+        <!-- ================= HOME ================= -->
+
+        <section id="home" class="hero">
+
+            <h2>Fresh From Farm To Your Home</h2>
+
+            <p>
+                Premium quality Fresh Corn, Packet Corn
+                and Baby Corn, fresh and ready for you.
+            </p>
+
+            <button id="exploreButton">
+                Explore Products
+            </button>
+
+        </section>
+
+
+
+        <!-- ================= SIGN IN ================= -->
+
+        <section id="signInSection" class="form-section">
+
+            <button id="closeSignInButton" class="back-button">
+                ← Back
+            </button>
+
+            <h2>Customer Sign In</h2>
+
+            <p class="section-description">
+                Enter your details once and we will remember
+                your delivery details for your orders.
+            </p>
+
+
+            <form id="customerForm">
+
+                <label for="customerName">
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter your name"
+                    required
+                >
+
+
+                <label for="customerPhone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="customerPhone"
+                    placeholder="Enter phone number"
+                    maxlength="10"
+                    required
+                >
+
+
+                <label for="customerAddress">
+                    Delivery Address
+                </label>
+
+                <textarea
+                    id="customerAddress"
+                    placeholder="Enter your delivery address"
+                    rows="4"
+                    required
+                ></textarea>
+
+
+                <button type="submit">
+                    Save & Continue
+                </button>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- ================= PRODUCTS ================= -->
+
+        <section id="products" class="products">
+
+            <h2>Our Fresh Products</h2>
+
+
+            <!-- MAIN PRODUCTS -->
+
+            <div id="mainProducts" class="product-container">
+
+
+                <!-- FRESH CORN -->
+
+                <div class="product-card">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=600&q=80"
+                        alt="Fresh Corn"
+                    >
+
+                    <h3>Fresh Corn</h3>
+
+                    <p>
+                        Fresh and high quality corn.
+                    </p>
+
+                    <button
+                        class="mainOrderButton"
+                        data-product="Fresh Corn">
+                        Order Now
+                    </button>
+
+                </div>
+
+
+                <!-- PACKET CORN -->
+
+                <div class="product-card">
+
+                    <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Corn_on_the_cob.jpg/640px-Corn_on_the_cob.jpg"
+                        alt="Packet Corn"
+                    >
+
+                    <h3>Packet Corn</h3>
+
+                    <p>
+                        Fresh sweet corn packed hygienically.
+                    </p>
+
+                    <button
+                        class="mainOrderButton"
+                        data-product="Packet Corn">
+                        Order Now
+                    </button>
+
+                </div>
+
+
+                <!-- BABY CORN -->
+
+                <div class="product-card">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1603046891744-76e6300e6e2d?auto=format&fit=crop&w=600&q=80"
+                        alt="Baby Corn"
+                    >
+
+                    <h3>Baby Corn</h3>
+
+                    <p>
+                        Fresh and crunchy baby corn.
+                    </p>
+
+                    <button
+                        class="mainOrderButton"
+                        data-product="Baby Corn">
+                        Order Now
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= VARIANT SECTION ================= -->
+
+            <section id="variantSection" class="variant-section">
+
+                <button id="exitButton" class="exit-button">
+                    ← Back to Products
+                </button>
+
+                <h2 id="variantTitle"></h2>
+
+                <div id="variantList"></div>
+
+            </section>
+
+
+
+            <!-- ================= CART SECTION ================= -->
+
+            <section id="cartSection" class="cart-section">
+
+                <button id="closeCartButton" class="close-cart-button">
+                    ← Continue Shopping
+                </button>
+
+                <h2>🛒 Your Cart</h2>
+
+                <div id="cartItems"></div>
+
+
+                <div class="cart-total">
+
+                    <h3>
+                        Total:
+                        ₹<span id="cartTotal">0</span>
+                    </h3>
+
+                    <button id="proceedButton">
+                        Proceed to Order
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ================= CHECKOUT ================= -->
+
+            <section id="checkoutSection" class="checkout-section">
+
+                <button id="backToCartButton" class="back-button">
+                    ← Back to Cart
+                </button>
+
+                <h2>Checkout</h2>
+
+
+                <!-- CUSTOMER DETAILS -->
+
+                <div class="checkout-card">
+
+                    <h3>📍 Delivery Details</h3>
+
+                    <div id="savedCustomerDetails">
+                    </div>
+
+                    <button
+                        id="editAddressButton"
+                        class="edit-button">
+                        ✏️ Edit Address
+                    </button>
+
+                </div>
+
+
+
+                <!-- ORDER SUMMARY -->
+
+                <div class="checkout-card">
+
+                    <h3>🛒 Order Summary</h3>
+
+                    <div id="checkoutItems">
+                    </div>
+
+                    <div class="checkout-total">
+
+                        <strong>
+                            Total:
+                            ₹<span id="checkoutTotal">0</span>
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PAYMENT -->
+
+                <div class="checkout-card">
+
+                    <h3>💳 Payment Method</h3>
+
+
+                    <label class="payment-option">
+
+                        <input
+                            type="radio"
+                            name="payment"
+                            value="UPI"
+                        >
+
+                        📱 UPI
+
+                    </label>
+
+
+                    <label class="payment-option">
+
+                        <input
+                            type="radio"
+                            name="payment"
+                            value="COD"
+                        >
+
+                        💵 Cash on Delivery
+
+                    </label>
+
+
+                    <!-- UPI -->
+
+                    <div
+                        id="upiSection"
+                        class="upi-section">
+
+                        <h3>📱 UPI Payment</h3>
+
+                        <p>
+                            Scan the QR code using
+                            GPay, PhonePe, Paytm or any
+                            UPI application.
+                        </p>
+
+
+                        <div class="qr-box">
+
+                            <!-- DEMO QR -->
+
+                            <img
+                                src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=THULIR-DEMO-UPI-PAYMENT"
+                                alt="Demo UPI QR Code"
+                            >
+
+                        </div>
+
+
+                        <p class="upi-note">
+                            UPI ID:
+                            <strong>thulir@upi</strong>
+                        </p>
+
+                        <p class="demo-note">
+                            Demo QR for frontend testing.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PLACE ORDER -->
+
+                <button
+                    id="placeOrderButton"
+                    class="place-order-button">
+
+                    Place Order
+
+                </button>
+
+            </section>
+
+
+
+            <!-- ================= SUCCESS ================= -->
+
+            <section
+                id="successSection"
+                class="success-section">
+
+                <div class="success-box">
+
+                    <div class="success-icon">
+                        ✅
+                    </div>
+
+                    <h2>
+                        Order Placed Successfully!
+                    </h2>
+
+                    <p>
+                        Thank you for ordering from
+                        Thulir Fresh Food Products.
+                    </p>
+
+                    <h3>
+                        Order Total:
+                        ₹<span id="successTotal">0</span>
+                    </h3>
+
+                    <p>
+                        We will contact you shortly.
+                    </p>
+
+                    <button id="continueShoppingButton">
+                        Continue Shopping
+                    </button>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- ================= CONTACT ================= -->
+
+        <section id="contact" class="contact">
+
+            <h2>Contact Us</h2>
+
+            <p>
+                Thank you for visiting
+                Thulir Fresh Food Products.
+            </p>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
